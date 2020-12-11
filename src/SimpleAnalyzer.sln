@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30808.221
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAnalyzer", "SimpleAnalyzer\SimpleAnalyzer\SimpleAnalyzer.csproj", "{A4553D28-A446-4ABF-9E62-56A9328B6965}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAnalyzer.CodeFixes", "SimpleAnalyzer\SimpleAnalyzer.CodeFixes\SimpleAnalyzer.CodeFixes.csproj", "{D26DE9F9-77F3-4415-B2F5-D100D85C70C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAnalyzer.Package", "SimpleAnalyzer\SimpleAnalyzer.Package\SimpleAnalyzer.Package.csproj", "{08806A5D-1D91-4793-8FA5-AE881F10F680}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAnalyzer.Test", "SimpleAnalyzer\SimpleAnalyzer.Test\SimpleAnalyzer.Test.csproj", "{77521716-5E6A-4982-946D-07498BB229E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleAnalyzer.Vsix", "SimpleAnalyzer\SimpleAnalyzer.Vsix\SimpleAnalyzer.Vsix.csproj", "{22EF2E8C-2E49-459D-A4CA-94F66F2C72B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{36400999-51D0-4017-94A6-8B455078877C}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\build.yaml = ..\.github\workflows\build.yaml
+		..\README.md = ..\README.md
+		..\terms.json = ..\terms.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4553D28-A446-4ABF-9E62-56A9328B6965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4553D28-A446-4ABF-9E62-56A9328B6965}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4553D28-A446-4ABF-9E62-56A9328B6965}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4553D28-A446-4ABF-9E62-56A9328B6965}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D26DE9F9-77F3-4415-B2F5-D100D85C70C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D26DE9F9-77F3-4415-B2F5-D100D85C70C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D26DE9F9-77F3-4415-B2F5-D100D85C70C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D26DE9F9-77F3-4415-B2F5-D100D85C70C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08806A5D-1D91-4793-8FA5-AE881F10F680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08806A5D-1D91-4793-8FA5-AE881F10F680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08806A5D-1D91-4793-8FA5-AE881F10F680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08806A5D-1D91-4793-8FA5-AE881F10F680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77521716-5E6A-4982-946D-07498BB229E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77521716-5E6A-4982-946D-07498BB229E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77521716-5E6A-4982-946D-07498BB229E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77521716-5E6A-4982-946D-07498BB229E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22EF2E8C-2E49-459D-A4CA-94F66F2C72B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22EF2E8C-2E49-459D-A4CA-94F66F2C72B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22EF2E8C-2E49-459D-A4CA-94F66F2C72B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22EF2E8C-2E49-459D-A4CA-94F66F2C72B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C6AF0F5-A9B2-4E72-BD19-E43793733BE7}
+	EndGlobalSection
+EndGlobal

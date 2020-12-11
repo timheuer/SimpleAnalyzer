@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>SimpleAnalyzer.Vsix</RootNamespace>
+    <AssemblyName>SimpleAnalyzer.Vsix</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GeneratePkgDefFile>false</GeneratePkgDefFile>
+    <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
+    <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
+    <IncludeDebugSymbolsInLocalVSIXDeployment>false</IncludeDebugSymbolsInLocalVSIXDeployment>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <VSSDKTargetPlatformRegRootSuffix>Roslyn</VSSDKTargetPlatformRegRootSuffix>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(DevEnvDir)devenv.exe</StartProgram>
+    <StartArguments>/rootsuffix $(VSSDKTargetPlatformRegRootSuffix)</StartArguments>
+  </PropertyGroup>
+
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="Exists('$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets')" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleAnalyzer.CodeFixes\SimpleAnalyzer.CodeFixes.csproj" />
+    <ProjectReference Include="..\SimpleAnalyzer\SimpleAnalyzer.csproj" />
+    <NuGetPackageToIncludeInVsix Include="Microsoft.Bcl.AsyncInterfaces" />
+    <NuGetPackageToIncludeInVsix Include="System.Buffers"/>
+    <NuGetPackageToIncludeInVsix Include="System.Memory" />
+    <NuGetPackageToIncludeInVsix Include="System.Numerics.Vectors" />
+    <NuGetPackageToIncludeInVsix Include="System.Runtime.CompilerServices.Unsafe"/>
+    <NuGetPackageToIncludeInVsix Include="System.Text.Encodings.Web" />
+    <NuGetPackageToIncludeInVsix Include="System.Text.Json" />
+    <NuGetPackageToIncludeInVsix Include="System.Threading.Tasks.Extensions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- https://github.com/dotnet/sdk/issues/433 -->
+    <ProjectReference Update="@(ProjectReference)" AdditionalProperties="TargetFramework=netstandard2.0" />
+
+    <!-- https://github.com/Microsoft/extendvs/issues/57 -->
+    <ProjectReference Update="@(ProjectReference)" Name="%(Filename)" />
+  </ItemGroup>
+
+  <!-- Include some of our NuGet-consumed assets into VSIX projects
+       This exists for two reasons:
+       1) In some cases, we need to include the contents of a NuGet package that is otherwise
+          contained within the SuppressFromVsix list, because we're actually the component
+          inside Visual Studio that ships that component
+       2) The SDK targets don't currently look at the ReferenceCopyLocalPaths produced
+          by the NuGet build task. -->
+  <Target Name="IncludeNuGetResolvedAssets"
+          DependsOnTargets="ResolvePackageDependenciesForBuild"
+          BeforeTargets="GeneratePkgDef"
+          Condition="'@(NuGetPackageToIncludeInVsix)' != ''">
+
+    <!-- Calculate a list of packages ReferenceCopyLocalPaths originate from whose content should not be included in the VSIX -->
+    <ItemGroup>
+      <_ExcludedPackageId Include="@(ReferenceCopyLocalPaths->'%(NuGetPackageId)')" />
+      <_ExcludedPackageId Remove="@(NuGetPackageToIncludeInVsix)"/>
+    </ItemGroup>
+
+    <!-- Build a list assets to include in the VSIX keyed by package id -->
+    <ItemGroup>
+      <_AssetsByPackageId Include="@(ReferenceCopyLocalPaths->'%(NuGetPackageId)')">
+        <Path>%(ReferenceCopyLocalPaths.Identity)</Path>
+      </_AssetsByPackageId>
+
+      <_AssetsByPackageId Remove="@(_ExcludedPackageId)" />
+    </ItemGroup>
+
+    <!-- Flow metadata set on NuGetPackageToIncludeInVsix to VSIXCopyLocalReferenceSourceItem -->
+    <JoinItems Left="@(_AssetsByPackageId)" LeftKey="" LeftMetadata="*"
+               Right="@(NuGetPackageToIncludeInVsix)" RightKey="" RightMetadata="*">
+      <Output TaskParameter="JoinResult" ItemName="_AssetsWithMetadata" />
+    </JoinItems>
+
+    <ItemGroup>
+      <!-- Include the assets in the VSIX -->
+      <VSIXCopyLocalReferenceSourceItem Include="@(_AssetsWithMetadata->'%(Path)')">
+        <ForceIncludeInVsix>true</ForceIncludeInVsix>
+        <Private>true</Private>
+        <Ngen Condition="'%(_AssetsWithMetadata.Optimization)' == 'true'">true</Ngen>
+        <NgenArchitecture Condition="'%(_AssetsWithMetadata.Optimization)' == 'true'">All</NgenArchitecture>
+        <NgenPriority Condition="'%(_AssetsWithMetadata.Optimization)' == 'true'">3</NgenPriority>
+      </VSIXCopyLocalReferenceSourceItem>
+
+      <!-- Add PkgDef* items for assets that specify PkgDefEntry -->
+      <PkgDefBindingRedirect Include="@(_AssetsWithMetadata->'%(Path)')" Condition="'%(_AssetsWithMetadata.PkgDefEntry)' == 'BindingRedirect' and %(_AssetsWithMetadata.AssetType) == 'runtime'" />
+      <PkgDefCodeBase Include="@(_AssetsWithMetadata->'%(Path)')" Condition="'%(_AssetsWithMetadata.PkgDefEntry)' == 'CodeBase' and %(_AssetsWithMetadata.AssetType) == 'runtime'" />
+    </ItemGroup>
+  </Target>
+
+
+</Project>
