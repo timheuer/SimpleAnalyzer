@@ -5,7 +5,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <RootNamespace>SimpleAnalyzer.Vsix</RootNamespace>
-    <AssemblyName>SimpleAnalyzer.Vsix</AssemblyName>
+    <AssemblyName>SimpleAnalyzerExtension</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -36,10 +36,10 @@
     <ProjectReference Include="..\SimpleAnalyzer.CodeFixes\SimpleAnalyzer.CodeFixes.csproj" />
     <ProjectReference Include="..\SimpleAnalyzer\SimpleAnalyzer.csproj" />
     <NuGetPackageToIncludeInVsix Include="Microsoft.Bcl.AsyncInterfaces" />
-    <NuGetPackageToIncludeInVsix Include="System.Buffers"/>
+    <NuGetPackageToIncludeInVsix Include="System.Buffers" />
     <NuGetPackageToIncludeInVsix Include="System.Memory" />
     <NuGetPackageToIncludeInVsix Include="System.Numerics.Vectors" />
-    <NuGetPackageToIncludeInVsix Include="System.Runtime.CompilerServices.Unsafe"/>
+    <NuGetPackageToIncludeInVsix Include="System.Runtime.CompilerServices.Unsafe" />
     <NuGetPackageToIncludeInVsix Include="System.Text.Encodings.Web" />
     <NuGetPackageToIncludeInVsix Include="System.Text.Json" />
     <NuGetPackageToIncludeInVsix Include="System.Threading.Tasks.Extensions" />
@@ -63,15 +63,12 @@
           inside Visual Studio that ships that component
        2) The SDK targets don't currently look at the ReferenceCopyLocalPaths produced
           by the NuGet build task. -->
-  <Target Name="IncludeNuGetResolvedAssets"
-          DependsOnTargets="ResolvePackageDependenciesForBuild"
-          BeforeTargets="GeneratePkgDef"
-          Condition="'@(NuGetPackageToIncludeInVsix)' != ''">
+  <Target Name="IncludeNuGetResolvedAssets" DependsOnTargets="ResolvePackageDependenciesForBuild" BeforeTargets="GeneratePkgDef" Condition="'@(NuGetPackageToIncludeInVsix)' != ''">
 
     <!-- Calculate a list of packages ReferenceCopyLocalPaths originate from whose content should not be included in the VSIX -->
     <ItemGroup>
       <_ExcludedPackageId Include="@(ReferenceCopyLocalPaths->'%(NuGetPackageId)')" />
-      <_ExcludedPackageId Remove="@(NuGetPackageToIncludeInVsix)"/>
+      <_ExcludedPackageId Remove="@(NuGetPackageToIncludeInVsix)" />
     </ItemGroup>
 
     <!-- Build a list assets to include in the VSIX keyed by package id -->
@@ -84,8 +81,7 @@
     </ItemGroup>
 
     <!-- Flow metadata set on NuGetPackageToIncludeInVsix to VSIXCopyLocalReferenceSourceItem -->
-    <JoinItems Left="@(_AssetsByPackageId)" LeftKey="" LeftMetadata="*"
-               Right="@(NuGetPackageToIncludeInVsix)" RightKey="" RightMetadata="*">
+    <JoinItems Left="@(_AssetsByPackageId)" LeftKey="" LeftMetadata="*" Right="@(NuGetPackageToIncludeInVsix)" RightKey="" RightMetadata="*">
       <Output TaskParameter="JoinResult" ItemName="_AssetsWithMetadata" />
     </JoinItems>
 
