@@ -1,0 +1,29 @@
+[
+  {
+    "TermID": "1",
+    "Severity": "1",
+    "Term": "verybad",
+    "TermClass": "Profanity",
+    "Context": "When used pejoratively",
+    "ActionRecommendation": "Remove",
+    "Why": "No profanity is tolerated in code"
+  },
+  {
+    "TermID": "2",
+    "Severity": "2",
+    "Term": "maybebad",
+    "TermClass": "Diversity",
+    "Context": "When used to describe certain types of people",
+    "ActionRecommendation": "Remove",
+    "Why": "Strive for diversity in representing people"
+  },
+  {
+    "TermID": "3",
+    "Severity": "3",
+    "Term": "notsobad",
+    "TermClass": "Geopolitical",
+    "Context": "When used in describing politics.",
+    "ActionRecommendation": "Consider context and rewrite",
+    "Why": "This term can be culturally sensitive"
+  }
+]

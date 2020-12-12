@@ -1,16 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace SimpleAnalyzer
 {
@@ -24,7 +18,7 @@ namespace SimpleAnalyzer
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
         private const string Category = "Naming";
         private const string HtmlHelpUri = "https://github.com/timheuer/SimpleAnalyzer";
-
+        private List<Term> terms;
         private static readonly DiagnosticDescriptor WarningRule = new DiagnosticDescriptor("TERM001", Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: Description, helpLinkUri: HtmlHelpUri);
         private static readonly DiagnosticDescriptor ErrorRule = new DiagnosticDescriptor("TERM002", Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description, helpLinkUri: HtmlHelpUri);
         private static readonly DiagnosticDescriptor InfoRule = new DiagnosticDescriptor("TERM003", Title, MessageFormat, Category, DiagnosticSeverity.Info, isEnabledByDefault: true, description: Description, helpLinkUri: HtmlHelpUri);
@@ -38,11 +32,11 @@ namespace SimpleAnalyzer
 
             context.RegisterCompilationStartAction((ctx) =>
             {
-                ImmutableArray<AdditionalText> additionalFiles = ctx.Options.AdditionalFiles;
-                AdditionalText termsFile = additionalFiles.FirstOrDefault(file => Path.GetFileName(file.Path).Equals("terms.json"));
-                SourceText json = termsFile.GetText(ctx.CancellationToken);
-
-                List<Term> terms = JsonSerializer.Deserialize<List<Term>>(json.ToString());
+                if (terms is null)
+                {
+                    var currentDirecory = GetFolderTypeWasLoadedFrom<SimpleAnalyzerAnalyzer>();
+                    terms = JsonSerializer.Deserialize<List<Term>>(File.ReadAllBytes(Path.Combine(currentDirecory, "terms.json")));
+                }
 
                 ctx.RegisterSymbolAction((symbolContext) =>
                 {
@@ -52,7 +46,7 @@ namespace SimpleAnalyzer
                     {
                         if (ContainsUnsafeWords(symbol.Name, term.Name))
                         {
-                            var diag = Diagnostic.Create(GetRule(term, symbol.Name), symbol.Locations[0], term.Name, symbol.Name, term.Severity, term.Recommendation);
+                            var diag = Diagnostic.Create(GetRule(term, symbol.Name), symbol.Locations[0], term.Name, symbol.Name, term.Severity, term.Class);
                             symbolContext.ReportDiagnostic(diag);
                             break;
                         }
@@ -62,6 +56,8 @@ namespace SimpleAnalyzer
                         SymbolKind.Event, SymbolKind.Namespace, SymbolKind.Parameter);
             });
         }
+
+        private static string GetFolderTypeWasLoadedFrom<T>() => new FileInfo(new Uri(typeof(T).Assembly.CodeBase).LocalPath).Directory.FullName;
 
         private DiagnosticDescriptor GetRule(Term term, string identifier)
         {

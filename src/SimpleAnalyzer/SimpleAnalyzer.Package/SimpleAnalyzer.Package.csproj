@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -48,6 +48,7 @@
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutputPath)\SimpleAnalyzer.dll" PackagePath="analyzers/dotnet/cs" />
       <TfmSpecificPackageFile Include="$(OutputPath)\SimpleAnalyzer.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\terms.json" PackagePath="analyzers/dotnet/cs" />
       <TfmSpecificPackageFile Include="$(PkgMicrosoft_Bcl_AsyncInterfaces)\lib\netstandard2.0\Microsoft.Bcl.AsyncInterfaces.dll" PackagePath="analyzers/dotnet/cs" />
       <TfmSpecificPackageFile Include="$(PkgSystem_Buffers)\lib\netstandard2.0\System.Buffers.dll" PackagePath="analyzers/dotnet/cs" />
       <TfmSpecificPackageFile Include="$(PkgSystem_Memory)\lib\netstandard2.0\System.Memory.dll" PackagePath="analyzers/dotnet/cs" />

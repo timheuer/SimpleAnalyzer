@@ -43,6 +43,9 @@
     <NuGetPackageToIncludeInVsix Include="System.Text.Encodings.Web" />
     <NuGetPackageToIncludeInVsix Include="System.Text.Json" />
     <NuGetPackageToIncludeInVsix Include="System.Threading.Tasks.Extensions" />
+    <Content Include="$(OutputPath)\terms.json">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
