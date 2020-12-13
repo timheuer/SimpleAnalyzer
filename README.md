@@ -1,3 +1,5 @@
+![Build](https://github.com/timheuer/SimpleAnalyzer/workflows/Build/badge.svg)
+
 # Sample Code Analyzer
 This is just a sample code analyzer that helped me learn about code analysis and better understand the Roslyn capabilities for analyzers/code fixes.
 
