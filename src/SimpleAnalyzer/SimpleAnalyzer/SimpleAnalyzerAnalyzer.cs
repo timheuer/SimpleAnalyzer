@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SimpleAnalyzer
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
     public class SimpleAnalyzerAnalyzer : DiagnosticAnalyzer
     {
         // You can change these strings in the Resources.resx file. If you do not want your analyzer to be localize-able, you can use regular strings for Title and MessageFormat.
